@@ -84,3 +84,12 @@ export const LoginButton = styled.button`
     width: 280px;
   }
 `
+
+export const ErrorMessage = styled.p`
+  color: #ff0000;
+  font-family: 'Roboto';
+  font-size: 12px;
+  @media screen and (min-width: 767px) {
+    font-size: 18px;
+  }
+`

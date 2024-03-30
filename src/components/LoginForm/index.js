@@ -1,4 +1,5 @@
 import {Component} from 'react'
+import Cookies from 'js-cookie'
 
 import {
   LoginBgContainer,
@@ -10,10 +11,17 @@ import {
   CheckboxInputElement,
   CheckboxContainer,
   LoginButton,
+  ErrorMessage,
 } from './styledComponents'
 
-class Login extends Component {
-  state = {usernameInput: '', passwordInput: '', textType: 'password'}
+class LoginForm extends Component {
+  state = {
+    usernameInput: '',
+    passwordInput: '',
+    textType: 'password',
+    errorMsg: '',
+    showError: false,
+  }
 
   onChangeUsername = event => {
     this.setState({usernameInput: event.target.value})
@@ -23,12 +31,34 @@ class Login extends Component {
     this.setState({passwordInput: event.target.value})
   }
 
+  onSubmitFailureView = () => {
+    this.setState({
+      errorMsg: "Username and Password didn't Matched",
+      showError: true,
+    })
+  }
+
+  onSubmitSuccess = jwtToken => {
+    const {history} = this.props
+
+    Cookies.set('jwt_token', jwtToken, {expires: 30})
+
+    history.replace('/')
+  }
+
+  onSubmitFailure = () => {
+    this.setState({
+      showError: true,
+      errorMsg: "Username and Password didn't Match",
+    })
+  }
+
   getListOfAllVideos = async event => {
     event.preventDefault()
 
     const {usernameInput, passwordInput} = this.state
 
-    const userDetails = {usernameInput, passwordInput}
+    const userDetails = {username: usernameInput, password: passwordInput}
 
     const options = {
       method: 'POST',
@@ -36,12 +66,14 @@ class Login extends Component {
     }
 
     const apiUrl = 'https://apis.ccbp.in/login'
-
     const response = await fetch(apiUrl, options)
-
     const data = await response.json()
 
-    console.log(data)
+    if (response.ok === true) {
+      this.onSubmitSuccess(data.jwt_token)
+    } else {
+      this.onSubmitFailure()
+    }
   }
 
   onChangePasswordShow = event => {
@@ -53,7 +85,15 @@ class Login extends Component {
   }
 
   render() {
-    const {textType, usernameInput, passwordInput} = this.state
+    const {
+      textType,
+      usernameInput,
+      passwordInput,
+      showError,
+      errorMsg,
+    } = this.state
+    const showErrorMsg = showError && errorMsg
+
     return (
       <LoginBgContainer>
         <FormContainer onSubmit={this.getListOfAllVideos}>
@@ -91,10 +131,12 @@ class Login extends Component {
             <LabelElement htmlFor="SHOW">Show Password</LabelElement>
           </CheckboxContainer>
           <LoginButton type="submit">Login</LoginButton>
+
+          {showError && <ErrorMessage>{`*${showErrorMsg}`}</ErrorMessage>}
         </FormContainer>
       </LoginBgContainer>
     )
   }
 }
 
-export default Login
+export default LoginForm
