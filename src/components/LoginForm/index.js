@@ -1,72 +1,74 @@
 import {Component} from 'react'
 import Cookies from 'js-cookie'
+import {Redirect} from 'react-router-dom'
 
 import {
-  LoginBgContainer,
-  ImageElement,
+  AppContainer,
   FormContainer,
-  InputElement,
-  LabelElement,
   InputContainer,
-  CheckboxInputElement,
   CheckboxContainer,
   LoginButton,
-  ErrorMessage,
+  SubmitError,
+  InputLabel,
+  UserInput,
+  Checkbox,
+  ShowPassword,
 } from './styledComponents'
 
 class LoginForm extends Component {
   state = {
-    usernameInput: '',
-    passwordInput: '',
-    textType: 'password',
+    username: '',
+    password: '',
+    showPassword: false,
+    showSubmitError: false,
     errorMsg: '',
-    showError: false,
   }
 
-  onChangeUsername = event => {
-    this.setState({usernameInput: event.target.value})
+  onChangeHandler = event => {
+    this.setState({[event.target.name]: event.target.value})
   }
 
-  onChangePassword = event => {
-    this.setState({passwordInput: event.target.value})
+  onShowPassword = () => {
+    this.setState(prevState => ({showPassword: !prevState.showPassword}))
   }
 
-  onSubmitFailureView = () => {
+  onSubmitFailureView = errorMsg => {
     this.setState({
-      errorMsg: "Username and Password didn't Matched",
-      showError: true,
+      showSubmitError: true,
+      errorMsg,
     })
   }
 
   onSubmitSuccess = jwtToken => {
     const {history} = this.props
 
-    Cookies.set('jwt_token', jwtToken, {expires: 30})
+    Cookies.set('jwt_token', jwtToken, {expires: 30, path: '/'})
 
     history.replace('/')
   }
 
   onSubmitFailure = () => {
     this.setState({
-      showError: true,
+      showSubmitError: true,
       errorMsg: "Username and Password didn't Match",
     })
   }
 
-  getListOfAllVideos = async event => {
+  submitForm = async event => {
     event.preventDefault()
 
-    const {usernameInput, passwordInput} = this.state
+    const {username, password} = this.state
 
-    const userDetails = {username: usernameInput, password: passwordInput}
+    const userDetails = {username, password}
+
+    const url = 'https://apis.ccbp.in/login'
 
     const options = {
       method: 'POST',
       body: JSON.stringify(userDetails),
     }
 
-    const apiUrl = 'https://apis.ccbp.in/login'
-    const response = await fetch(apiUrl, options)
+    const response = await fetch(url, options)
     const data = await response.json()
 
     if (response.ok === true) {
@@ -76,65 +78,66 @@ class LoginForm extends Component {
     }
   }
 
-  onChangePasswordShow = event => {
-    if (event.target.checked === true) {
-      this.setState({textType: 'text'})
-    } else {
-      this.setState({textType: 'password'})
-    }
+  renderUsernameField = () => {
+    const {username} = this.state
+    return (
+      <>
+        <InputLabel htmlFor="username">USERNAME</InputLabel>
+        <UserInput
+          type="text"
+          id="username"
+          value={username}
+          name="username"
+          onChange={this.onChangeHandler}
+          placeholder="username"
+        />
+      </>
+    )
+  }
+
+  renderPasswordField = () => {
+    const {password, showPassword} = this.state
+    const inputType = showPassword ? 'text' : 'password'
+
+    return (
+      <>
+        <InputLabel htmlFor="password">PASSWORD</InputLabel>
+        <UserInput
+          type={inputType}
+          id="password"
+          value={password}
+          name="password"
+          onChange={this.onChangeHandler}
+          placeholder="Password"
+        />
+        <CheckboxContainer>
+          <Checkbox
+            type="checkbox"
+            id="checkbox"
+            onChange={this.onShowPassword}
+          />
+          <ShowPassword htmlFor="checkbox">Show Password</ShowPassword>
+        </CheckboxContainer>
+      </>
+    )
   }
 
   render() {
-    const {
-      textType,
-      usernameInput,
-      passwordInput,
-      showError,
-      errorMsg,
-    } = this.state
-    const showErrorMsg = showError && errorMsg
+    const {showSubmitError, errorMsg} = this.state
+    const jwtToken = Cookies.get('jwt_token')
+    if (jwtToken !== undefined) {
+      return <Redirect to="/" />
+    }
 
     return (
-      <LoginBgContainer>
-        <FormContainer onSubmit={this.getListOfAllVideos}>
-          <ImageElement
-            src="https://assets.ccbp.in/frontend/react-js/nxt-watch-logo-light-theme-img.png"
-            alt="website logo"
-          />
-          <InputContainer>
-            <LabelElement htmlFor="USERNAME">USERNAME</LabelElement>
-            <InputElement
-              type="text"
-              placeholder="Username"
-              id="USERNAME"
-              value={usernameInput}
-              onChange={this.onChangeUsername}
-            />
-          </InputContainer>
-          <InputContainer>
-            <LabelElement htmlFor="PASSWORD">PASSWORD</LabelElement>
-            <InputElement
-              type={textType}
-              placeholder="Password"
-              id="PASSWORD"
-              value={passwordInput}
-              onChange={this.onChangePassword}
-            />
-          </InputContainer>
-
-          <CheckboxContainer>
-            <CheckboxInputElement
-              type="checkbox"
-              id="SHOW"
-              onChange={this.onChangePasswordShow}
-            />
-            <LabelElement htmlFor="SHOW">Show Password</LabelElement>
-          </CheckboxContainer>
+      <AppContainer>
+        <FormContainer onSubmit={this.submitForm}>
+          <InputContainer>{this.renderUsernameField()}</InputContainer>
+          <InputContainer>{this.renderPasswordField()}</InputContainer>
           <LoginButton type="submit">Login</LoginButton>
-
-          {showError && <ErrorMessage>{`*${showErrorMsg}`}</ErrorMessage>}
+          {showSubmitError && <SubmitError>*{errorMsg}</SubmitError>}
         </FormContainer>
-      </LoginBgContainer>
+      </AppContainer>
     )
   }
 }
