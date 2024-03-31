@@ -1,9 +1,6 @@
 import Header from '../Header'
-
 import NavigationBar from '../NavigationBar'
-
 import ThemeAndVideoContext from '../../context/ThemeAndVideoContext'
-
 import {
   NotFoundContainer,
   NotFoundVideosView,
@@ -16,8 +13,8 @@ const NotFound = () => (
   <ThemeAndVideoContext.Consumer>
     {value => {
       const {isDarkTheme} = value
-      const bgColor = isDarkTheme ? '#181818' : '#f9f9f9f9'
-      const headingColor = isDarkTheme ? '#f9f9f9f9' : '#1e293b'
+      const bgColor = isDarkTheme ? '#181818' : '#f9f9f9'
+      const headingColor = isDarkTheme ? '#f9f9f9' : '#1e293b'
       const noteColor = isDarkTheme ? '#e2e8f0' : '#475569'
 
       const notFindImageUrl = isDarkTheme
@@ -34,7 +31,7 @@ const NotFound = () => (
                 Page Not Found
               </NotFoundVideoHeading>
               <NotFoundVideoNote noteColor={noteColor}>
-                We are sorry,the page you requested could not found.
+                We are sorry, the page you requested could not be found.
               </NotFoundVideoNote>
             </NotFoundVideosView>
           </NotFoundContainer>

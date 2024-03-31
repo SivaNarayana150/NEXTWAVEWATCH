@@ -13,6 +13,7 @@ import {
   LogoutButton,
   ProfileImage,
   ModelContainer,
+  LogoutIconButton,
   CloseButton,
   ConfirmButton,
   ModalDesc,
@@ -67,10 +68,36 @@ const Header = props => (
               modal
               trigger={
                 <LogoutButton type="button" bgColor={bgColor} color={color}>
-                  {' '}
-                  <FiLogOut size={25} color={color} />
+                  Logout
                 </LogoutButton>
               }
+            >
+              {close => (
+                <ModelContainer>
+                  <ModalDesc>Are you sure you want to logout?</ModalDesc>
+                  <ButtonsContainer>
+                    <CloseButton
+                      type="button"
+                      data-testid="closeButton"
+                      onClick={() => close()}
+                    >
+                      Cancel
+                    </CloseButton>
+                    <ConfirmButton type="button" onClick={onClickLogout}>
+                      Confirm
+                    </ConfirmButton>
+                  </ButtonsContainer>
+                </ModelContainer>
+              )}
+            </Popup>
+            <Popup
+              modal
+              trigger={
+                <LogoutIconButton type="button">
+                  <FiLogOut size={25} color={color} />
+                </LogoutIconButton>
+              }
+              className="popup-content"
             >
               {close => (
                 <ModelContainer>

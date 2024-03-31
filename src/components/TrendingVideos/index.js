@@ -1,21 +1,12 @@
 import {Component} from 'react'
-
 import Cookies from 'js-cookie'
-
 import Loader from 'react-loader-spinner'
-
 import {HiFire} from 'react-icons/hi'
-
 import Header from '../Header'
-
 import NavigationBar from '../NavigationBar'
-
 import ThemeAndVideoContext from '../../context/ThemeAndVideoContext'
-
 import FailureView from '../FailureView'
-
 import VideoCard from '../VideoCard'
-
 import {
   TrendingContainer,
   TrendingVideoTitle,
@@ -77,11 +68,11 @@ class TrendingVideos extends Component {
     }
   }
 
-  renderLoadingView = () => {
-    ;<LoaderContainer data-testid="loader">
+  renderLoadingView = () => (
+    <LoaderContainer data-testid="loader">
       <Loader type="ThreeDots" color="#0b69ff" height="50" width="50" />
     </LoaderContainer>
-  }
+  )
 
   renderVideosView = () => {
     const {trendingVideos} = this.state
