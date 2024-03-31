@@ -1,6 +1,8 @@
-import Component from 'react'
+import {Component} from 'react'
 
 import {AiOutlineClose, AiOutlineSearch} from 'react-icons/ai'
+
+import Loader from 'react-loader-spinner'
 
 import Cookies from 'js-cookie'
 
@@ -52,7 +54,7 @@ class Home extends Component {
     const jwtToken = Cookies.get('jwt_token')
     const url = `https://apis.ccbp.in/videos/all?search=${searchInput}`
     const options = {
-      Header: {
+      headers: {
         Authorization: `Bearer ${jwtToken}`,
       },
       method: 'GET',
@@ -97,7 +99,7 @@ class Home extends Component {
 
   renderLoadingView = () => (
     <LoaderContainer data-testid="Loader">
-      <loader type="Threedots" color="#0b69ff" height="50" width="50" />
+      <Loader type="ThreeDots" color="#0b69ff" height="50" width="50" />
     </LoaderContainer>
   )
 

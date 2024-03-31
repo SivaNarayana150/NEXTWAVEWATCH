@@ -48,7 +48,7 @@ class TrendingVideos extends Component {
     const url = 'https://apis.ccbp.in/videos/trending'
     const options = {
       headers: {
-        Authorized: `Bearer ${jwtToken}`,
+        Authorization: `Bearer ${jwtToken}`,
       },
       method: 'GET',
     }

@@ -13,7 +13,7 @@ import ThemeAndVideoContext from '../../context/ThemeAndVideoContext'
 
 import FailureView from '../FailureView'
 
-import GameVideoCard from '../GameVideoCard'
+import VideoCard from '../GameVideoCard'
 
 import {
   GamingContainer,
@@ -76,7 +76,7 @@ class GamingVideos extends Component {
     return (
       <GamingVideoList>
         {gamingVideos.map(eachVideo => (
-          <GameVideoCard key={eachVideo.id} videoDetails={eachVideo} />
+          <VideoCard key={eachVideo.id} videoDetails={eachVideo} />
         ))}
       </GamingVideoList>
     )

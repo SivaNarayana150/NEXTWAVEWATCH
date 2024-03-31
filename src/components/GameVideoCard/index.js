@@ -9,9 +9,9 @@ import {
   GamingViewsAndDate,
 } from './styledComponents'
 
-const GameVideoCard = props => {
-  const {VideoDetails} = props
-  const {id, title, thumbnailUrl, viewCount} = VideoDetails
+const VideoCard = props => {
+  const {videoDetails} = props
+  const {id, title, thumbnailUrl, viewCount} = videoDetails
 
   return (
     <ThemeAndVideoContext.Consumer>
@@ -37,4 +37,4 @@ const GameVideoCard = props => {
     </ThemeAndVideoContext.Consumer>
   )
 }
-export default GameVideoCard
+export default VideoCard
