@@ -33,28 +33,25 @@ class LoginForm extends Component {
     this.setState(prevState => ({showPassword: !prevState.showPassword}))
   }
 
+  onSubmitSuccess = jwtToken => {
+    const {history} = this.props
+
+    Cookies.set('jwt_token', jwtToken, {expires: 30, path: '/'})
+
+    history.replace('/')
+  }
+
+  onSubmitFailure = errorMsg => {
+    this.setState({
+      showSubmitError: true,
+      errorMsg,
+    })
+  }
+
   submitForm = async event => {
     event.preventDefault()
 
     const {username, password} = this.state
-
-    if (!username && !password) {
-      this.setState({
-        showSubmitError: true,
-        errorMsg: 'Username and Password are required',
-      })
-      return
-    }
-
-    if (!username) {
-      this.setState({showSubmitError: true, errorMsg: 'Username is required'})
-      return
-    }
-
-    if (!password) {
-      this.setState({showSubmitError: true, errorMsg: 'Password is required'})
-      return
-    }
 
     const userDetails = {username, password}
 
@@ -71,23 +68,8 @@ class LoginForm extends Component {
     if (response.ok === true) {
       this.onSubmitSuccess(data.jwt_token)
     } else {
-      this.onSubmitFailure()
+      this.onSubmitFailure(data.error_msg)
     }
-  }
-
-  onSubmitSuccess = jwtToken => {
-    const {history} = this.props
-
-    Cookies.set('jwt_token', jwtToken, {expires: 30, path: '/'})
-
-    history.replace('/')
-  }
-
-  onSubmitFailure = () => {
-    this.setState({
-      showSubmitError: true,
-      errorMsg: 'Invalid username or password',
-    })
   }
 
   render() {
@@ -95,7 +77,8 @@ class LoginForm extends Component {
       showSubmitError,
       errorMsg,
       username,
-      showSubmitPassword,
+      showPassword,
+
       password,
     } = this.state
     const jwtToken = Cookies.get('jwt_token')
@@ -125,13 +108,14 @@ class LoginForm extends Component {
           <InputContainer>
             <InputLabel htmlFor="password">PASSWORD</InputLabel>
             <UserInput
-              type={showSubmitPassword ? 'text' : 'password'}
+              type={showPassword ? 'text' : 'password'}
               id="password"
               value={password}
               name="password"
               onChange={this.onChangeHandler}
               placeholder="Password"
             />
+
             <CheckboxContainer>
               <Checkbox
                 type="checkbox"
@@ -142,7 +126,7 @@ class LoginForm extends Component {
             </CheckboxContainer>
           </InputContainer>
           <LoginButton type="submit">Login</LoginButton>
-          {showSubmitError && <SubmitError>{errorMsg}</SubmitError>}
+          {showSubmitError && <SubmitError>*{errorMsg}</SubmitError>}
         </FormContainer>
       </AppContainer>
     )

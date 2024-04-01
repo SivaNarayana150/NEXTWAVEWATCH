@@ -26,14 +26,14 @@ import {
 } from './styledComponents'
 
 const PlayVideoView = props => {
-  const {videoDetails, isLiked, isDisliked, clickDisliked, clickLiked} = props
+  const {videoDetails, isLiked, isDisLiked, clickDisLiked, clickLiked} = props
 
   const onClickLike = () => {
     clickLiked()
   }
 
   const onClickDislike = () => {
-    clickDisliked()
+    clickDisLiked()
   }
 
   return (
@@ -43,7 +43,7 @@ const PlayVideoView = props => {
         const textColor = isDarkTheme ? '#64748b' : '#231f20'
         let isSaved
         const index = savedVideos.findIndex(
-          eachVideo => eachVideo === videoDetails.id,
+          eachVideo => eachVideo.id === videoDetails.id,
         )
         if (index === -1) {
           isSaved = false
@@ -84,7 +84,7 @@ const PlayVideoView = props => {
                 <BtnContainer>
                   <SocialButton
                     type="button"
-                    color={isDisliked ? '#2563eb' : '#64748b'}
+                    color={isDisLiked ? '#2563eb' : '#64748b'}
                     onClick={onClickDislike}
                   >
                     <AiOutlineDislike size={25} />

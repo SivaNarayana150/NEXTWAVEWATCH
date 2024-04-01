@@ -28,7 +28,7 @@ class VideoDetailsView extends Component {
     apiStatus: apiStatusConstants.initial,
     videoDetails: [],
     isLiked: false,
-    isDisliked: false,
+    isDisLiked: false,
   }
 
   componentDidMount() {
@@ -84,27 +84,27 @@ class VideoDetailsView extends Component {
   clickLiked = () => {
     this.setState(prevState => ({
       isLiked: !prevState.isLiked,
-      isDisliked: false,
+      isDisLiked: false,
     }))
   }
 
-  clickDisliked = () => {
+  clickDisLiked = () => {
     this.setState(prevState => ({
-      isDisliked: !prevState.isDisliked,
+      isDisLiked: !prevState.isDisLiked,
       isLiked: false,
     }))
   }
 
   renderPlayVideoView = () => {
-    const {videoDetails, isLiked, isDisliked} = this.state
+    const {videoDetails, isLiked, isDisLiked} = this.state
     return (
       <PlayVideoView
         videoDetails={videoDetails}
         clickLiked={this.clickLiked}
-        clickDisliked={this.clickDisliked}
+        clickDisLiked={this.clickDisLiked}
         clickSaved={this.clickSaved}
         isLiked={isLiked}
-        isDisliked={isDisliked}
+        isDisLiked={isDisLiked}
       />
     )
   }
